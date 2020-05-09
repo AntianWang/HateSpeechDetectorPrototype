@@ -1,0 +1,24 @@
+GOAL: Build a robust Hate Speech Detector
+Baselines: Support Vector Machine, Principle Component Analysis, Ensemble Methods (e.g. Adaboost)
+Procedures:
+1. Prepare dataset (labeled), formatted as "(sentence, context, 1)" for hate speech and "(sentence, context, 0)" for non-hate speech, where both sentence and context are strings of same length (curtail/padding to make them same length).
+2. Preprocess data: WordToVec process all sentences and all contexts. Format now becomes "(sentence_vec, context_vec, 1/0)".
+3. Build 1st improved model: kernel SVM
+    We are going to train a slack-boundary kernel SVM on labeled dataset.
+    The kernel is to be determined, choices include RBF/Gaussian kernel, Polynomial kernel, and String kernel.
+    We use slack-boundary since data is not necessarily linearly-separable, slack coefficient to be determined.
+    Assume dataset is (x_i, c_i, y_i), using Lagrangian to train parameters alpha_i and b.
+    We will classify any new data "(x, c)" by sign(\sum alpha_i y_i \langle c_i, c \rangle \langle x_i, x \rangle + b)
+    The inner product on context is to measure how strongly the two contexts are similar.
+4. Build 2nd improved model: Autoencoder
+    We are going to train a kernel PCA on the distribution of dataset.
+    Dimension of bottleneck b to be determined.
+    This is essentially calculating SVD of the input space, and finding orthogonal eigenvectors of X^TX.
+    After we found the principle components PC1, PC2, ..., PCn, we will select those that imply significantly clusters of the data.
+    Then we will use the relative entropy of each of the significant components to determine which cluster to assign 1 and which cluster 0.
+5. Ensemble
+    We will import several other models, including Naive Bayes, Logistic Regressions, BERT, and GRU.
+    We will apply Adaboost to these models, together with the two we built, on a cross-validation set.
+    The idea is that all these models are loosely correlated and thus suitable for boosting. Some are generative, some are discriminative. Some are pretrained, some are not. Some capture dependencies of features, some assume independence. Some train on feature space, some train on original space.
+    Essentially this is weighing all training examples, to obtain a satisfactory reweighing of the different models.
+    To test, obtain results from all models, and output reweighed result.
