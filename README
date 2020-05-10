@@ -21,4 +21,6 @@ Procedures:
     We will apply Adaboost to these models, together with the two we built, on a cross-validation set.
     The idea is that all these models are loosely correlated and thus suitable for boosting. Some are generative, some are discriminative. Some are pretrained, some are not. Some capture dependencies of features, some assume independence. Some train on feature space, some train on original space.
     Essentially this is weighing all training examples, to obtain a satisfactory reweighing of the different models.
-    To test, obtain results from all models, and output reweighed result.
+    To test, obtain results from all models, and output reweighed result. 
+    
+Ps. Due to time limit, the code is pseudocode, i.e. not runnable. Anyhow, ML is mostly about ideas.
